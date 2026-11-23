@@ -104,7 +104,7 @@ Analyse détaillée:
 - Classification report
 - Métriques par classe
 
-### 5. Détection Webcam en Temps Réel
+### 4. Détection Webcam en Temps Réel
 
 ```bash
 python webcam_detection.py
