@@ -204,20 +204,6 @@ Modifiez `config.py` pour ajuster:
 - ModelCheckpoint (save best)
 - TensorBoard
 
-## 📊 Exemple d'Utilisation API
-
-```python
-import requests
-
-# Upload vidéo
-with open('test_video.mp4', 'rb') as f:
-    files = {'file': f}
-    response = requests.post('http://localhost:8000/predict', files=files)
-    result = response.json()
-    
-print(f"Label: {result['label']}")
-print(f"Confidence: {result['confidence']:.2%}")
-```
 
 ## 🐛 Troubleshooting
 
@@ -246,10 +232,3 @@ cap = cv2.VideoCapture(1)  # Essayer 1 au lieu de 0
 - ResNet50: He et al. (2015)
 - Violence Detection: état de l'art
 
-## 👨‍💻 Auteur
-
-Projet de détection de violence avec Deep Learning
-
-## 📄 License
-
-MIT License
