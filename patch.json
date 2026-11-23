@@ -1,0 +1,1 @@
+[{"op": "add", "path": "/spec/template/spec/volumes", "value": [{"name": "code-volume", "configMap": {"name": "stream-server-code"}}]}, {"op": "add", "path": "/spec/template/spec/containers/0/volumeMounts", "value": [{"name": "code-volume", "mountPath": "/app/stream_server.py", "subPath": "stream_server.py"}]}]

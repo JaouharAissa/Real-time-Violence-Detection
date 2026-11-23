@@ -1,0 +1,95 @@
+# ==========================================
+# Python
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.Python
+env/
+venv/
+.venv/
+.venv310/
+ENV/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ==========================================
+# Jupyter Notebooks checkpoints
+# ==========================================
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# ==========================================
+# Modèles ML (trop lourds pour git)
+# ==========================================
+models/*.keras
+models/*.h5
+models/*.pb
+models/*.pt
+models/*.pth
+models/*.ckpt
+
+# ==========================================
+# Base de données locale
+# ==========================================
+*.db
+*.sqlite
+*.sqlite3
+
+# ==========================================
+# Environnement & secrets
+# ==========================================
+.env
+.env.local
+.env.*.local
+
+# ==========================================
+# Logs & données temporaires
+# ==========================================
+logs/
+temp/
+*.log
+*.tmp
+
+# ==========================================
+# Fichiers JS compilés / bundle temporaires
+# ==========================================
+temp_bundle.js
+node_modules/
+
+# ==========================================
+# Anaconda / Conda
+# ==========================================
+anaconda_projects/
+
+# ==========================================
+# IDE & OS
+# ==========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==========================================
+# Frontend build artifacts
+# ==========================================
+frontend/dist/
+frontend/build/
+frontend/node_modules/
+
+# ==========================================
+# Google Cloud
+# ==========================================
+.gcloud/
+service-account-key.json
+gcp-key.json
+*-credentials.json

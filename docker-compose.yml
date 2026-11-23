@@ -1,0 +1,82 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: violence-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-violence_db}
+      POSTGRES_USER: ${POSTGRES_USER:-violence_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-violence_pass}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-violence_user} -d ${POSTGRES_DB:-violence_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: violence-backend
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-violence_user}:${POSTGRES_PASSWORD:-violence_pass}@db:5432/${POSTGRES_DB:-violence_db}
+      MODEL_PATH: ${MODEL_PATH:-models/phase2_20260415_184926.keras}
+      NOTIFY_EMAIL_ENABLED: ${NOTIFY_EMAIL_ENABLED:-false}
+      NOTIFY_EMAIL_TO: ${NOTIFY_EMAIL_TO:-}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+      SMTP_STARTTLS: ${SMTP_STARTTLS:-true}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
+  stream:
+    build:
+      context: .
+      dockerfile: Dockerfile.stream
+    container_name: violence-stream
+    environment:
+      MODEL_PATH: ${MODEL_PATH:-models/phase2_20260415_184926.keras}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-violence_user}:${POSTGRES_PASSWORD:-violence_pass}@db:5432/${POSTGRES_DB:-violence_db}
+      NOTIFY_EMAIL_ENABLED: ${NOTIFY_EMAIL_ENABLED:-false}
+      NOTIFY_EMAIL_TO: ${NOTIFY_EMAIL_TO:-}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+      SMTP_STARTTLS: ${SMTP_STARTTLS:-true}
+      ALERT_COOLDOWN_S: ${ALERT_COOLDOWN_S:-60}
+    depends_on:
+      backend:
+        condition: service_started
+    ports:
+      - "8001:8001"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000}
+        VITE_STREAM_URL: ${VITE_STREAM_URL:-http://localhost:8001}
+    container_name: violence-frontend
+    depends_on:
+      backend:
+        condition: service_started
+      stream:
+        condition: service_started
+    ports:
+      - "5173:80"
+
+volumes:
+  postgres_data:
+

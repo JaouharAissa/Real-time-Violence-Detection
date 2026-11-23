@@ -1,0 +1,84 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: violence-prod
+
+resources:
+  - ../../base/backend-deployment.yaml
+  - ../../base/backend-service.yaml
+  - ../../base/stream-deployment.yaml
+  - ../../base/stream-service.yaml
+  - ../../base/frontend-deployment.yaml
+  - ../../base/frontend-service.yaml
+  - serviceaccount.yaml
+  - ingress.yaml
+
+patches:
+  - target:
+      kind: Deployment
+      name: backend
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 2
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: europe-west1-docker.pkg.dev/projetdeeplearning-494220/violence-repo/backend:a57156b9
+      - op: replace
+        path: /spec/template/spec/containers/0/env
+        value:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: DATABASE_URL
+          - name: MODEL_PATH
+            value: models/phase2_20260415_184926.keras
+      - op: add
+        path: /spec/template/spec/serviceAccountName
+        value: violence-backend-sa
+      - op: add
+        path: /spec/template/spec/containers/-
+        value:
+          name: cloud-sql-proxy
+          image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.14.1
+          args:
+            - "--structured-logs"
+            - "--port=5432"
+            - "projetdeeplearning-494220:europe-west1:violence-sql"
+          securityContext:
+            runAsNonRoot: true
+  - target:
+      kind: Deployment
+      name: stream
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 2
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: europe-west1-docker.pkg.dev/projetdeeplearning-494220/violence-repo/stream:a57156b9
+      - op: replace
+        path: /spec/template/spec/containers/0/env
+        value:
+          - name: MODEL_PATH
+            value: models/phase2_20260415_184926.keras
+  - target:
+      kind: Deployment
+      name: frontend
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 2
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: europe-west1-docker.pkg.dev/projetdeeplearning-494220/violence-repo/frontend:a57156b9
+  - target:
+      kind: Service
+      name: frontend
+    patch: |-
+      - op: replace
+        path: /spec/type
+        value: ClusterIP
+
+

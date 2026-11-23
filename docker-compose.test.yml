@@ -1,0 +1,17 @@
+services:
+  db:
+    environment:
+      POSTGRES_DB: violence_test
+  backend:
+    environment:
+      APP_ENV: test
+      DATABASE_URL: postgresql://${POSTGRES_USER:-violence_user}:${POSTGRES_PASSWORD:-violence_pass}@db:5432/violence_test
+  stream:
+    environment:
+      APP_ENV: test
+  frontend:
+    build:
+      args:
+        VITE_API_BASE_URL: http://localhost:8000
+        VITE_STREAM_URL: http://localhost:8001
+

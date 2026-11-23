@@ -1,0 +1,24 @@
+substitutions:
+  _REGION: europe-west1
+  _REPO: violence-repo
+  _TAG: latest
+  _FRONTEND_API_URL: http://34.8.64.217
+  _FRONTEND_STREAM_URL: http://34.8.64.217/stream
+
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - frontend/Dockerfile
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/frontend:${_TAG}
+      - --build-arg
+      - VITE_API_BASE_URL=${_FRONTEND_API_URL}
+      - --build-arg
+      - VITE_STREAM_URL=${_FRONTEND_STREAM_URL}
+      - frontend
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/frontend:${_TAG}
+

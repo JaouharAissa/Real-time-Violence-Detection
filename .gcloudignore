@@ -1,0 +1,48 @@
+# Default gcloudignore uses .gitignore rules. We add explicit excludes for large/local artifacts.
+.git
+.gitignore
+
+# Python envs / caches
+.venv/
+.venv310/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+
+# Frontend artifacts
+frontend/node_modules/
+frontend/dist/
+node_modules/
+dist/
+build/
+
+# Data / datasets (very large)
+Violence/
+NonViolence/
+data/
+datasets/
+*.mp4
+*.avi
+*.mov
+*.mkv
+data_mmap/
+preprocessed_data_optical_flow.pkl
+
+# Logs / temp
+logs/
+temp/
+*.log
+training_log.txt
+
+# Notebooks / exports
+*.ipynb
+*.pkl
+
+# Local editor / cursor
+.vscode/
+.idea/
+.cursor/
+terminals/
+agent-tools/
+
