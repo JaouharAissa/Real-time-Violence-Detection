@@ -104,19 +104,6 @@ Analyse détaillée:
 - Classification report
 - Métriques par classe
 
-### 4. API REST (Test vidéos uploadées)
-
-```bash
-python app.py
-```
-
-Accès: http://localhost:8000
-
-Endpoints:
-- `POST /predict` - Prédiction sur une vidéo
-- `POST /predict_batch` - Prédiction sur plusieurs vidéos
-- `GET /health` - Status de l'API
-
 ### 5. Détection Webcam en Temps Réel
 
 ```bash
